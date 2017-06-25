@@ -1,6 +1,7 @@
 import os
 import SystolicArray as sa
 import Data as dt
+import numpy as np
 
 class Simulator(object):
 
@@ -19,16 +20,23 @@ if __name__ == "__main__":
 
     if os.path.isfile('some_file.html'): os.remove('some_file.html')
 
-    weights = sim.data.filters[:,0].reshape(n_ifmaps,n_ofmaps)
-    keys    = map(lambda x: x['data'], sim.data.filters[:,0])
+    weights = np.array(sim.data.filters)[0,:].T
+    ifmaps = np.array(sim.data.ifmaps).T
+    keys  = list(set([y['data'] for x in weights for y in x ]))
 
-    ifmap_warmup = ['0']*n_ifmaps
-    print("Warm up phase")
-    for weight in weights.T[::-1]:
-        sim.sa.step(ifmap_warmup, weight)
+
+    for weight, ifmap in zip(weights,ifmaps):
+        sim.sa.step(ifmap, weight)
         sim.sa.show(keys)
 
-    print("Data phase")
-    for ifmap, weight in zip(sim.data.ifmaps.T,weights.T):
-       sim.sa.step(ifmap, weight)
-       sim.sa.show(keys)
+
+    # ifmap_warmup = ['0']*n_ifmaps
+    # print("Warm up phase")
+    # for weight in weights.T[::-1]:
+    #     sim.sa.step(ifmap_warmup, weight)
+    #     sim.sa.show(keys)
+    #
+    # print("Data phase")
+    # for ifmap, weight in zip(np.array(sim.data.ifmaps).T,weights.T):
+    #    sim.sa.step(ifmap, weight)
+    #    sim.sa.show(keys)
