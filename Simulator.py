@@ -22,7 +22,7 @@ if __name__ == "__main__":
     weights = sim.data.filters[:,0].reshape(n_ifmaps,n_ofmaps)
     keys    = map(lambda x: x['data'], sim.data.filters[:,0])
 
-    ifmap_warmup = [{'data':'0', 'epoch':'even'}]*n_ifmaps
+    ifmap_warmup = ['0']*n_ifmaps
     print("Warm up phase")
     for weight in weights.T[::-1]:
         sim.sa.step(ifmap_warmup, weight)
